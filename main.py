@@ -11,7 +11,7 @@ new_uni = st.text_input("Назва університету")
 if st.button("Додати університет"):
     if new_uni is not None and new_uni not in st.session_state.universities:
         st.session_state.universities.append(new_uni)
-        st.sucess(f"Додано {new_uni}")
+        st.success(f"Додано {new_uni}")
     elif new_uni in st.session_state.universities:
         st.warning("Такий університет вже додано")
 
@@ -34,7 +34,7 @@ if st.button("Додати критерій"):
         if st.button(f"Додати підкритерій критерію {new_crit}"):
             if new_subcr is not None and new_subcr not in st.session_state.criterias[new_crit]:
                 st.session_state.criterias[new_crit].append(new_subcr)
-                st.sucess(f"До {new_crit} додано {new_subcr}")
+                st.success(f"До {new_crit} додано {new_subcr}")
             elif new_subcr in st.session_state.criterias[new_crit]:
                 st.warning("Ви вже це додали")
     elif new_crit in st.session_state.criterias:
