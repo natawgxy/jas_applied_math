@@ -10,7 +10,7 @@ if "universities" not in st.session_state:
 new_uni = st.text_input("Назва університету")
 if st.button("Додати університет"):
     if new_uni is not None and new_uni not in st.session_state.universities:
-        st.session_state.unoversities.append(new_uni)
+        st.session_state.universities.append(new_uni)
         st.sucess(f"Додано {new_uni}")
     elif new_uni in st.session_state.universities:
         st.warning("Такий університет вже додано")
