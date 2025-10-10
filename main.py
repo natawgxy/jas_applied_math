@@ -1,5 +1,5 @@
 import streamlit as st
-from streamlit_sortables import sort_items
+from st_draggable_list import DraggableList
 
 st.title("Ваш помічник у виборі університету")
 universities = []
@@ -23,7 +23,7 @@ if st.session_state.universities is not None:
 
 #=====================================================================
 
-st.markdown("Наші запропоновані критерії")
+st.markdown("Зробіть свої критерії")
 if "criterias" not in st.session_state:
     st.session_state.criterias = {} 
 # criterias[crit] = {subcr1, ...}
@@ -73,13 +73,13 @@ st.markdown("Розташуйте критерії за порядком важ�
 if st.session_state.criterias:
     st.markdown(f"Розташуйте за порядком важливості підкритерії критерію {c}")
     st.markdown("(зверху - найважливіший)")
-    sorting = sort_items(list(st.session_state.criterias.keys(), direction="vertical"))
+    sorting = DraggableList(st.session_state.criterias, direction="vertical")
     st.session_state.crit_sorted = sorting
     for c in sorting:
       subcrs = st.session_state.criterias[c]
       if subcrs is not None:
           st.write(f"Відсортуйте підкритерії критерію {c}")
-          sorting2 = sort_items(subcrs, direction="vertical")
+          sorting2 = DraggableList(subcrs, direction="vertical")
           st.session_state.criterias[c] = sorting2
 
 
