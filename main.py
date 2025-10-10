@@ -71,7 +71,6 @@ for u in st.session_state.universities:
             st.session_state.scores[u][c][subcr] = scale[score]
 
 #=====================================================================         
-st.markdown("Розташуйте критерії за порядком важливості для вас")
 if st.session_state.criterias:
     st.markdown(f"Розташуйте за порядком важливості підкритерії критерію {c}")
     variants = list(st.session_state.criterias.keys())
@@ -84,7 +83,7 @@ if st.session_state.criterias:
       if subcrs is not None:
           st.write(f"Відсортуйте підкритерії критерію {c}")
           sorting2 = st.multiselect(
-              label="Оберіть порядок підкритеріїв (перший - найважливіший)",
+              label="(перший - найважливіший)",
               options=subcrs, default=subcrs)
           st.session_state.criterias[c] = sorting2
 
