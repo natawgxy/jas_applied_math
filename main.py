@@ -24,12 +24,12 @@ if st.session_state.universities is not None:
 
 st.markdown("Зробіть свої критерії")
 if "criterias" not in st.session_state:
-    st.session_state.criterias = {} 
+    st.session_state.criterias = {}
 # criterias[crit] = {subcr1, ...}
 new_crit = st.text_input("Новий критерій")
 if st.button("Додати критерій"):
     if new_crit is not None and new_crit not in st.session_state.criterias:
-        st.session_state.criterias.append(new_crit)
+        st.session_state.criterias[new_crit] = []
         new_subcr = st.text_input("Підкритерій")
         if st.button(f"Додати підкритерій критерію {new_crit}"):
             if new_subcr is not None and new_subcr not in st.session_state.criterias[new_crit]:
