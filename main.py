@@ -56,7 +56,7 @@ if "scores" not in st.session_state:
 
 # трёхмерный массив scores[university][criteria][subcriteria]
 for u in st.session_state.universities:
-    st.subheader(u)
+    st.markdown(u)
     st.session_state.scores[u] = {}
     for c, subcrs in st.session_state.criterias.items():
         st.markdown(c)
@@ -71,14 +71,18 @@ for u in st.session_state.universities:
 st.markdown("Розташуйте критерії за порядком важливості для вас")
 if st.session_state.criterias:
     st.markdown(f"Розташуйте за порядком важливості підкритерії критерію {c}")
-    st.markdown("(перший - найважливіший)")
-    sorting = st.multiselect(st.session_state.criterias, default=st.session_state.criterias)
+    variants = list(st.session_state.criterias.keys())
+    sorting = st.multiselect(
+        label="Оберіть порядок критеріїв (перший - найважливіший)",
+        options=variants, default=variants)
     st.session_state.crit_sorted = sorting
     for c in sorting:
       subcrs = st.session_state.criterias[c]
       if subcrs is not None:
           st.write(f"Відсортуйте підкритерії критерію {c}")
-          sorting2 = st.multiselect(st.session_state.subcrs, default=st.session_state.subcrs)
+          sorting2 = st.multiselect(
+              label="Оберіть порядок підкритеріїв (перший - найважливіший)",
+              options=subcrs, default=subcrs)
           st.session_state.criterias[c] = sorting2
 
 
