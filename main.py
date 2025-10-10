@@ -72,14 +72,14 @@ for u in st.session_state.universities:
 st.markdown("Розташуйте критерії за порядком важливості для вас")
 if st.session_state.criterias:
     st.markdown(f"Розташуйте за порядком важливості підкритерії критерію {c}")
-    st.markdown("(зверху - найважливіший)")
-    sorting = DraggableList(st.session_state.criterias, direction="vertical")
+    st.markdown("(перший - найважливіший)")
+    sorting = st.multiselect(st.session_state.criterias, default=st.session_state.criterias)
     st.session_state.crit_sorted = sorting
     for c in sorting:
       subcrs = st.session_state.criterias[c]
       if subcrs is not None:
           st.write(f"Відсортуйте підкритерії критерію {c}")
-          sorting2 = DraggableList(subcrs, direction="vertical")
+          sorting2 = st.multiselect(st.session_state.subcrs, default=st.session_state.subcrs)
           st.session_state.criterias[c] = sorting2
 
 
