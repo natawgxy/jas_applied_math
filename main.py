@@ -1,5 +1,4 @@
 import streamlit as st
-from st_draggable_list import DraggableList
 
 st.title("Ваш помічник у виборі університету")
 universities = []
