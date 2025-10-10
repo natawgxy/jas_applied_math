@@ -89,15 +89,15 @@ st.markdown("Зачекайте")
 
 # бек ========================================
 # строит табличку сравнения уников по критерию
-def build_table_comp_criteria():
+#def build_table_comp_criteria():
 
 
 # табличка с нормированным собственным вектором
-def build_norm_vec():
+#def build_norm_vec():
 
 
 # табличка с попарным сравнением подкритериев
-def build_table_com_subcriteria():
+#def build_table_com_subcriteria():
 
 
 
