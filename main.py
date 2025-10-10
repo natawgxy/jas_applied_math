@@ -30,16 +30,19 @@ new_crit = st.text_input("Новий критерій")
 if st.button("Додати критерій"):
     if new_crit is not None and new_crit not in st.session_state.criterias:
         st.session_state.criterias[new_crit] = []
-        new_subcr = st.text_input("Підкритерій")
-        if st.button(f"Додати підкритерій критерію {new_crit}"):
-            if new_subcr is not None and new_subcr not in st.session_state.criterias[new_crit]:
-                st.session_state.criterias[new_crit].append(new_subcr)
-                st.success(f"До {new_crit} додано {new_subcr}")
-            elif new_subcr in st.session_state.criterias[new_crit]:
-                st.warning("Ви вже це додали")
+        st.success(f"Додано критерій {new_crit}")
     elif new_crit in st.session_state.criterias:
         st.warning("Такий критерій вже додано")
 
+if st.session_state.criterias:
+    crit_for_subcr = st.selectbox("Оберіть критерій до якого хочете додати підкритерій", list(st.session_state.criterias.keys()))
+    new_subcr = st.text_input(" ")
+    if st.button(f"Додати підкритерій до {crit_for_subcr}"):
+        if new_subcr is not None and new_subcr not in st.session_state.criterias[new_crit]:
+            st.session_state.criterias[new_crit].append(new_subcr)
+            st.success(f"До {crit_for_subcr} додано {new_subcr}")
+        elif new_subcr in st.session_state.criterias[crit_for_subcr]:
+            st.warning("Ви вже це додали")
 #=====================================================================
 
 st.markdown("Оцініть кожен університет за певним критерієм")
@@ -56,7 +59,7 @@ if "scores" not in st.session_state:
 
 # трёхмерный массив scores[university][criteria][subcriteria]
 for u in st.session_state.universities:
-    st.markdown(u)
+    st.subheader(u)
     st.session_state.scores[u] = {}
     for c, subcrs in st.session_state.criterias.items():
         st.markdown(c)
