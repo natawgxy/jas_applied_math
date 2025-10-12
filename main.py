@@ -77,6 +77,8 @@ if st.session_state.criterias:
         label="Оберіть порядок критеріїв (перший - найважливіший)",
         options=variants, default=variants, key="s1")
     st.session_state.crit_sorted = sorting
+
+    tmp_sorted_subcrs = {}
     for c in sorting:
       subcrs = st.session_state.criterias[c]
       if subcrs is not None:
@@ -84,7 +86,10 @@ if st.session_state.criterias:
           sorting2 = st.multiselect(
               label="(перший - найважливіший)",
               options=subcrs, default=subcrs, key=f"s2-{c}")
-          st.session_state.criterias[c] = sorting2
+          tmp_sorted_subcrs[c] = sorting2
+    
+    for c, sorted_subcrs in tmp_sorted_subcrs.items():
+        st.session_state.criterias[c] = sorted_subcrs
 
 # бек ========================================
 # строит табличку сравнения уников по подкритерию
