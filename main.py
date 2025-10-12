@@ -197,7 +197,8 @@ def com_cr_or_subcr(sorted_list):
     for x in vl_vecs:
         x /= all_sum
 
-    return vl_vecs
+    result = [[sorted_list[i], round(vl_vecs[i], 3)] for i in range(n)]
+    return result
 
     
 def integral_score(uni, crs_w, subcrs_w, score_w):
@@ -205,7 +206,7 @@ def integral_score(uni, crs_w, subcrs_w, score_w):
     for [cr_name, cr_w] in crs_w:
         sum2 = 0
         for [subcr_name, subcr_w] in subcrs_w[cr_name]:
-            sum2 += (subcr_w * score_w[subcr_name])
+            sum2 += (subcr_w * score_w[uni])
         sum2 = sum2 * cr_w
         sum1 += sum2
     return sum1
