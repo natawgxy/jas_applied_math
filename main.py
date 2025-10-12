@@ -91,7 +91,7 @@ if st.session_state.criterias:
 def comp_uni_subcr(scores, cr, subcr):
     unis = st.session_state.universities
     n = len(unis)
-    table = [0 for _ in range(n) for _ in range(n)]
+    table = [[0 for _ in range(n)] for _ in range(n)]
     
     # табличка формата
     #     ХПИ    КНУ  ЛНУ
@@ -165,7 +165,7 @@ def comp_uni_subcr(scores, cr, subcr):
 def com_cr_or_subcr(sorted_list):
     # у меня логика такая: находим позицию каждого критерия/подкритерия в отсорт. массиве и сравниваем попарно позиции, если разница == 1, то ..
     n = len(sorted_list)
-    table = [0 for _ in range(n) for _ in range(n)]
+    table = [[0 for _ in range(n)] for _ in range(n)]
     for i in range(n):
         table[i][i] = 1
     
