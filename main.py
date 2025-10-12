@@ -72,7 +72,6 @@ for u in st.session_state.universities:
 
 #=====================================================================         
 if st.session_state.criterias:
-    st.markdown(f"Розташуйте за порядком важливості підкритерії критерію {c}")
     variants = list(st.session_state.criterias.keys())
     sorting = st.multiselect(
         label="Оберіть порядок критеріїв (перший - найважливіший)",
@@ -87,22 +86,160 @@ if st.session_state.criterias:
               options=subcrs, default=subcrs)
           st.session_state.criterias[c] = sorting2
 
-
-
-st.button("Обрати найкращий університет")
-st.markdown("Зачекайте")
-
 # бек ========================================
-# строит табличку сравнения уников по критерию
-#def build_table_comp_criteria():
+# строит табличку сравнения уников по подкритерию
+def comp_uni_subcr(scores, subcr):
+    unis = st.session_state.universities
+    n = len(unis)
+    table = [0 for _ in range(n) for _ in range(n)]
+    
+    # табличка формата
+    #     ХПИ    КНУ  ЛНУ
+    #ХПИ   1     1/3    5
+    #КНУ   3     1     1/7
+    #ЛНУ   1/5   7      1
+    # то, что в столбике справа более/менее приоритетнее того, что в верхней строке
+    
+    for i in range(0, n):
+        table[i][i] = 1 
+
+    for i in range(n):
+        for j in range(i+1, n):
+            if table[i][j] != 0:
+                continue
+
+            if scores[unis[i]][cr][subcr] == scores[unis[j]][cr][subcr]:
+                table[i][j] = 1
+                table[j][i] = 1
+            elif abs(scores[unis[i]][cr][subcr] - scores[unis[j]][cr][subcr]) == 1:
+                if scores[unis[i]][cr][subcr] > scores[unis[j]][cr][subcr]:
+                    table[i][j] = 3 
+                    table[j][i] = 1/3
+                else:
+                    table[i][j] = 1/3
+                    table[j][i] = 3
+            elif abs(scores[unis[i]][cr][subcr] - scores[unis[j]][cr][subcr]) == 2:
+                if scores[unis[i]][cr][subcr] > scores[unis[j]][cr][subcr]:
+                    table[i][j] = 5 
+                    table[j][i] = 1/5
+                else:
+                    table[i][j] = 1/5 
+                    table[j][i] = 5
+            elif abs(scores[unis[i]][cr][subcr] - scores[unis[j]][cr][subcr]) == 3:
+                if scores[unis[i]][cr][subcr] > scores[unis[j]][cr][subcr]:
+                    table[i][j] = 7 
+                    table[j][i] = 1/7
+                else:
+                    table[i][j] = 1/7
+                    table[j][i] = 7
+            elif abs(scores[unis[i]][cr][subcr] - scores[unis[j]][cr][subcr]) == 4:
+                if scores[unis[i]][cr][subcr] > scores[unis[j]][cr][subcr]:
+                    table[i][j] = 9
+                    table[j][i] = 1/9
+                else:
+                    table[i][j] = 1/9
+                    table[j][i] = 9
+
+    score_subcr = {} # словарь: уник, взвешенная оценка по подкритерию
+    # власний вектор 
+    vl_vecs = []   
+    for i in range(n):
+        vl_vec = 1
+        for j in range(n):
+            vl_vec = vl_vec * table[i][j] 
+        vl_vec = vl_vec ** (1/n)
+        vl_vecs.append(vl_vec)
+
+    # сразу нормируем
+    all_sum = sum(vl_vecs)
+    for x in vl_vecs:
+        x /= all_sum
+
+    for i, u in enumerate(unis):
+        score_subcr[u] = vl_vecs[i]
+
+    result = [subcr, score_subcr]
+    return result
+
+# табличка с попарным сравнением критериев/подкритериев
+def com_cr_or_subcr(sorted_list):
+    # у меня логика такая: находим позицию каждого критерия/подкритерия в отсорт. массиве и сравниваем попарно позиции, если разница == 1, то ..
+    n = len(sorted_list)
+    table = [0 for _ in range(n) for _ in range(n)]
+    for i in range(n):
+        table[i][i] = 1
+    
+    for i in range(n):
+        for j in range(i+1, n):
+            diff = abs(j-i)
+            if diff == 1:
+                table[i][j] = 3
+                table[j][i] = 1/3
+            if diff == 2:
+                table[i][j] = 5
+                table[j][i] = 1/5
+            if diff == 3:
+                table[i][j] = 7
+                table[j][i] = 1/7
+            if diff == 4:
+                table[i][j] = 9
+                table[j][i] = 1/9
+    vl_vecs = []   
+    for i in range(n):
+        vl_vec = 1
+        for j in range(n):
+            vl_vec = vl_vec * table[i][j] 
+        vl_vec = vl_vec ** (1/n)
+        vl_vecs.append(vl_vec)
+
+    # сразу нормируем
+    all_sum = sum(vl_vecs)
+    for x in vl_vecs:
+        x /= all_sum
+
+    return vl_vecs
+
+    
+def integral_score(uni, crs_w, subcrs_w, score_w):
+    sum1 = 0
+    for [cr_name, cr_w] in crs_w:
+        sum2 = 0
+        for [subcr_name, subcr_w] in subcrs_w[cr_name]:
+            sum2 += (subcr_w * score_w[subcr_name])
+        sum2 = sum2 * cr_w
+        sum1 += sum2
+    return sum1
+    
+
+#================
+if st.button("Обрати найкращий університет"):
+    int_scores = {} # uni, iintegral score
+    crs_w = com_cr_or_subcr("crs")
+    for c in st.session_state.criterias:
+        subcrs = st.session_state.criterias[c]
+        subcrs_w = com_cr_or_subcr(subcrs)
+        for subcr in subcrs:
+            w_scores = comp_uni_subcr(st.session_state.scores, subcr)
+            for uni in st.session_state.universities:
+                sc = integral_score(uni, crs_w, subcrs_w, w_scores)
+
+    max_sc = 0
+    ans_name = ""
+    for [uni_name, iscore] in int_scores:
+        if iscore > max_sc:
+            max_sc = iscore
+            ans_name = uni_name
+
+    st.markdown(f"Найкращий університет для вас: {ans_name}")
+    if st.button("Подивитися деталі аналізу"):
+        st.write("Інтегральна оцінка кожного університета")
+        st.table(int_scores, border=True)
 
 
-# табличка с нормированным собственным вектором
-#def build_norm_vec():
 
 
-# табличка с попарным сравнением подкритериев
-#def build_table_com_subcriteria():
+
+
 
 
 
