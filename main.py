@@ -83,7 +83,7 @@ if st.session_state.criterias:
           st.write(f"Відсортуйте підкритерії критерію {c}")
           sorting2 = st.multiselect(
               label="(перший - найважливіший)",
-              options=subcrs, default=subcrs, key=f"s2-{subcr}")
+              options=subcrs, default=subcrs, key=f"s2-{c}")
           st.session_state.criterias[c] = sorting2
 
 # бек ========================================
