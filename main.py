@@ -88,7 +88,7 @@ if st.session_state.criterias:
 
 # бек ========================================
 # строит табличку сравнения уников по подкритерию
-def comp_uni_subcr(scores, subcr):
+def comp_uni_subcr(scores, cr, subcr):
     unis = st.session_state.universities
     n = len(unis)
     table = [0 for _ in range(n) for _ in range(n)]
@@ -100,7 +100,7 @@ def comp_uni_subcr(scores, subcr):
     #ЛНУ   1/5   7      1
     # то, что в столбике справа более/менее приоритетнее того, что в верхней строке
     
-    for i in range(0, n):
+    for i in range(n):
         table[i][i] = 1 
 
     for i in range(n):
@@ -214,12 +214,13 @@ def integral_score(uni, crs_w, subcrs_w, score_w):
 #================
 if st.button("Обрати найкращий університет"):
     int_scores = {} # uni, iintegral score
-    crs_w = com_cr_or_subcr("crs")
+    crs = st.session_state.crit_sorted
+    crs_w = com_cr_or_subcr(crs)
     for c in st.session_state.criterias:
         subcrs = st.session_state.criterias[c]
         subcrs_w = com_cr_or_subcr(subcrs)
         for subcr in subcrs:
-            w_scores = comp_uni_subcr(st.session_state.scores, subcr)
+            w_scores = comp_uni_subcr(st.session_state.scores, c, subcr)
             for uni in st.session_state.universities:
                 sc = integral_score(uni, crs_w, subcrs_w, w_scores)
 
