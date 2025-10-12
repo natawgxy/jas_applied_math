@@ -38,8 +38,8 @@ if st.session_state.criterias:
     crit_for_subcr = st.selectbox("Оберіть критерій до якого хочете додати підкритерій", list(st.session_state.criterias.keys()))
     new_subcr = st.text_input(" ")
     if st.button(f"Додати підкритерій до {crit_for_subcr}"):
-        if new_subcr is not None and new_subcr not in st.session_state.criterias[new_crit]:
-            st.session_state.criterias[new_crit].append(new_subcr)
+        if new_subcr is not None and new_subcr not in st.session_state.criterias[crit_for_subcr]:
+            st.session_state.criterias[crit_for_subcr].append(new_subcr)
             st.success(f"До {crit_for_subcr} додано {new_subcr}")
         elif new_subcr in st.session_state.criterias[crit_for_subcr]:
             st.warning("Ви вже це додали")
@@ -206,7 +206,7 @@ def integral_score(uni, crs_w, subcrs_w, score_w):
     for [cr_name, cr_w] in crs_w:
         sum2 = 0
         for [subcr_name, subcr_w] in subcrs_w[cr_name]:
-            sum2 += (subcr_w * score_w[uni])
+            sum2 += (subcr_w * score_w[1][uni])
         sum2 = sum2 * cr_w
         sum1 += sum2
     return sum1
@@ -214,34 +214,31 @@ def integral_score(uni, crs_w, subcrs_w, score_w):
 
 #================
 if st.button("Обрати найкращий університет"):
-    int_scores = {} # uni, iintegral score
-    crs = st.session_state.crit_sorted
-    crs_w = com_cr_or_subcr(crs)
-    for c in st.session_state.criterias:
-        subcrs = st.session_state.criterias[c]
-        subcrs_w = com_cr_or_subcr(subcrs)
-        for subcr in subcrs:
-            w_scores = comp_uni_subcr(st.session_state.scores, c, subcr)
-            for uni in st.session_state.universities:
-                sc = integral_score(uni, crs_w, subcrs_w, w_scores)
+    if "crit_sorted" not in st.session_state or not st.session_state.crit_sorted:
+        st.error("Спочатку відсортуйте критерії за важливістю")
+    else:
+        int_scores = {} # uni, iintegral score
+        crs = st.session_state.crit_sorted
+        crs_w = com_cr_or_subcr(crs)
+        for c in st.session_state.criterias:
+            subcrs = st.session_state.criterias[c]
+            subcrs_w = com_cr_or_subcr(subcrs)
+            for subcr in subcrs:
+                w_scores = comp_uni_subcr(st.session_state.scores, c, subcr)
+                for uni in st.session_state.universities:
+                    sc = integral_score(uni, crs_w, subcrs_w, w_scores)
+                    int_scores[uni] = sc
 
-    max_sc = 0
-    ans_name = ""
-    for [uni_name, iscore] in int_scores:
-        if iscore > max_sc:
-            max_sc = iscore
-            ans_name = uni_name
+        max_sc = 0
+        ans_name = ""
+        for [uni_name, iscore] in int_scores:
+            if iscore > max_sc:
+                max_sc = iscore
+                ans_name = uni_name
 
     st.markdown(f"Найкращий університет для вас: {ans_name}")
     if st.button("Подивитися деталі аналізу"):
         st.write("Інтегральна оцінка кожного університета")
         st.table(int_scores, border=True)
-
-
-
-
-
-
-
 
 
