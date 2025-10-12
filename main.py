@@ -75,7 +75,7 @@ if st.session_state.criterias:
     variants = list(st.session_state.criterias.keys())
     sorting = st.multiselect(
         label="Оберіть порядок критеріїв (перший - найважливіший)",
-        options=variants, default=variants)
+        options=variants, default=variants, key="s1")
     st.session_state.crit_sorted = sorting
     for c in sorting:
       subcrs = st.session_state.criterias[c]
@@ -83,7 +83,7 @@ if st.session_state.criterias:
           st.write(f"Відсортуйте підкритерії критерію {c}")
           sorting2 = st.multiselect(
               label="(перший - найважливіший)",
-              options=subcrs, default=subcrs)
+              options=subcrs, default=subcrs, key="s2")
           st.session_state.criterias[c] = sorting2
 
 # бек ========================================
