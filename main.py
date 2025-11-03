@@ -126,7 +126,7 @@ if st.session_state.criterias:
         st.session_state.criterias[c] = sorted_subcrs
 
 # бек ========================================
-# строит табличку сравнения уников по подкритерию
+# сравниваем уники по одному подкритерию и считаем их оценку по подкритерию
 def comp_uni_subcr(scores, cr, subcr):
     unis = st.session_state.universities
     n = len(unis)
@@ -179,7 +179,6 @@ def comp_uni_subcr(scores, cr, subcr):
                     table[i][j] = 1/9
                     table[j][i] = 9
 
-    score_subcr = {} # словарь: уник, взвешенная оценка по подкритерию
     # власний вектор 
     vl_vecs = []   
     for i in range(n):
@@ -194,11 +193,16 @@ def comp_uni_subcr(scores, cr, subcr):
     for x in vl_vecs:
         x /= all_sum
 
+    # score_subcr[uni][cr][subcr] = нормированная оценка по подкритерию, критерия, уника
+    score_subcr = {}
     for i, u in enumerate(unis):
-        score_subcr[u] = vl_vecs[i]
-
-    result = [subcr, score_subcr]
-    return result
+        if u not in score_subcr:
+            score_subcr[u] = {}
+        if cr not in score_subcr[u]:
+            score_subcr[u][cr] = {}
+        score_subcr[u][cr][subcr] = vl_vecs[i]
+        
+    return score_subcr
 
 # попарное сравнение критериев и рассчёт их весов
 def compare_criterias(sorted_list):
@@ -284,7 +288,7 @@ def integral_score(uni, crs_w, subcrs_w, score_w):
     for [cr_name, cr_w] in crs_w:
         sum2 = 0
         for [subcr_name, subcr_w] in subcrs_w[cr_name]:
-            sum2 += (subcr_w * score_w[uni])
+            sum2 += (subcr_w * score_w[uni][cr_name][subcr_name])
         sum2 = sum2 * cr_w
         sum1 += sum2
     return sum1
@@ -299,7 +303,8 @@ if st.button("Обрати найкращий університет"):
         crs_w = compare_criterias(crs)
         for c in st.session_state.criterias:
             subcrs = st.session_state.criterias[c]
-            subcrs_w = compare_subcrs(subcrs) # веса подкритериев
+            subcrs_w = {}
+            subcrs_w[c] = compare_subcrs(subcrs) # веса подкритериев
             for subcr in subcrs:
                 w_scores = comp_uni_subcr(st.session_state.scores, c, subcr)
                 for uni in st.session_state.universities:
