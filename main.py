@@ -53,8 +53,10 @@ for cr in selected_criterias:
         f"Підкритерії для {cr}:",
         options=cr_subcr_options[cr]
     )
-    selected_subcriterias.extend((cr, subcr) for subcr in subcrs)
+    if subcrs:
+        st.session_state.criterias[cr] = subcrs
 
+# добавить в criterias данные
 
 st.markdown("Зробіть свої критерії")
 # criterias[crit] = {subcr1, ...}
