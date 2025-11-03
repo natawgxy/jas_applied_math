@@ -1,9 +1,8 @@
 import streamlit as st
 from universities_data import uni_options
-
+from universities_data import cr_subcr_options
 
 st.title("Ваш помічник у виборі університету")
-universities = []
 st.markdown("Введіть назви університетів, які ви розглядаєте для вступу")
 if "universities" not in st.session_state:
     st.session_state.universities = []
@@ -21,7 +20,6 @@ def apply_filters(filters, uni_options):
 filters = st.multiselect(
     "Оберіть бажане розташування",
     options=list(uni_options.keys()),
-    default=["Україна"]
 )
 filtered_list = apply_filters(filters, uni_options)
 selected_unis = st.multiselect(
@@ -33,16 +31,32 @@ new_uni = st.text_input("Введіть університет, якщо не з
 if st.button("Додати свій"):
     selected_unis.append(new_uni)
 
+st.session_state.universities = selected_unis
+
 if selected_unis is not None:
     st.write("Ви додали")
     for u in selected_unis:
         st.markdown(f"* {u}")
 
 #=====================================================================
-
-st.markdown("Зробіть свої критерії")
+st.markdown("Оберіть запропоновані критерії")
 if "criterias" not in st.session_state:
     st.session_state.criterias = {}
+
+selected_criterias = st.multiselect(
+    options=list(cr_subcr_options.keys())
+)
+
+selected_subcriterias = []
+for cr in selected_criterias:
+    subcrs = st.multiselect(
+        f"Підкритерії для {cr}:",
+        options=cr_subcr_options[cr]
+    )
+    selected_subcriterias.extend((cr, subcr) for subcr in subcrs)
+
+
+st.markdown("Зробіть свої критерії")
 # criterias[crit] = {subcr1, ...}
 new_crit = st.text_input("Новий критерій")
 if st.button("Додати критерій"):
