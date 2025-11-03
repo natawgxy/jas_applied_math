@@ -311,9 +311,9 @@ if st.button("Обрати найкращий університет"):
             for subcr in st.session_state.criterias[c]:
                 w_scores = comp_uni_subcr(st.session_state.scores, c, subcr) # для одного подкритерия
                 for uni in st.session_state.universities:
-                    if uni not in all_w_scores[c]:
+                    if uni not in all_w_scores:
                         all_w_scores[uni] = {}
-                    if c not in all_w_scores[c]:
+                    if c not in all_w_scores[uni]:
                         all_w_scores[uni][c] = {}
                     all_w_scores[uni][c][subcr] = w_scores[uni][c][subcr]
 
