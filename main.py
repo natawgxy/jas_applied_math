@@ -39,11 +39,11 @@ if selected_unis is not None:
         st.markdown(f"* {u}")
 
 #=====================================================================
-st.markdown("Оберіть запропоновані критерії")
 if "criterias" not in st.session_state:
     st.session_state.criterias = {}
 
 selected_criterias = st.multiselect(
+    label="Оберіть запропоновані критерії",
     options=list(cr_subcr_options.keys())
 )
 
