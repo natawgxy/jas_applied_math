@@ -288,7 +288,7 @@ def integral_score(uni, crs_w, subcrs_w, score_w):
     for [cr_name, cr_w] in crs_w:
         sum2 = 0
         subcr_names = st.session_state.criterias[cr_name]
-        subcr_weights = subcr_w[cr_name]
+        subcr_weights = subcrs_w[cr_name]
         for subcr_name, subcr_w in zip(subcr_names, subcr_weights):
             sum2 += (subcr_w * score_w[uni][cr_name][subcr_name])
         sum2 = sum2 * cr_w
