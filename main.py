@@ -281,13 +281,15 @@ def compare_subcrs(sorted_list, criteria):
     subcr_w = {criteria: vl_vecs}
     return subcr_w 
 
-# subcr_w[название_критерия] = [] = веса подкритерием критерия такого-то
 # score_w = взвешенные оценки уника по подкритериям
+# subcrs_w[cr_mame] = веса подкритериев критерия cr_name
 def integral_score(uni, crs_w, subcrs_w, score_w):
     sum1 = 0
     for [cr_name, cr_w] in crs_w:
         sum2 = 0
-        for [subcr_name, subcr_w] in subcrs_w[cr_name]:
+        subcr_names = st.session_state.criterias[cr_name]
+        subcr_weights = subcr_w[cr_name]
+        for subcr_name, subcr_w in zip(subcr_names, subcr_weights):
             sum2 += (subcr_w * score_w[uni][cr_name][subcr_name])
         sum2 = sum2 * cr_w
         sum1 += sum2
