@@ -24,12 +24,12 @@ filters = st.multiselect(
     default=["Україна"]
 )
 filtered_list = apply_filters(filters, uni_options)
-new_uni = st.text_input("Введіть або додайте університет")
 selected_unis = st.multiselect(
-    "Оберіть університет(и)",
+    "Оберіть університет(и). Іноземні університети пишіть англійською мовою",
     options=filtered_list,
     default=[]
 )
+new_uni = st.text_input("Введіть університет, якщо не знайшли у списку")
 if st.button("Додати свій"):
     selected_unis.append(new_uni)
 
