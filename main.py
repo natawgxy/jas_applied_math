@@ -320,8 +320,8 @@ if st.button("Обрати найкращий університет"):
                 ans_name = uni_name
 
         st.markdown(f"Найкращий університет для вас: {ans_name}")
-            if st.button("Подивитися деталі аналізу"):
-                st.write("Інтегральна оцінка кожного університета")
-                st.table(int_scores, border=True)
+        if st.button("Подивитися деталі аналізу"):
+            st.write("Інтегральна оцінка кожного університета")
+            st.table(int_scores, border=True)
 
 
