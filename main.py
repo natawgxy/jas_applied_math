@@ -302,22 +302,20 @@ if st.button("Обрати найкращий університет"):
         int_scores = {} # uni, iintegral score
         crs = st.session_state.crit_sorted
         crs_w = compare_criterias(crs)
+        subcrs_w = {}
+        all_w_scores = {}
+                
         for c in st.session_state.criterias:
-            subcrs_w = {}
             subcrs = st.session_state.criterias[c]
             subcrs_w[c] = compare_subcrs(subcrs, c) # веса подкритериев
-            for subcr in subcrs:
-                all_w_scores = {}
-                for c in st.session_state.criterias:
-                    all_w_scores[c] = {}
-                    for subcr in st.session_state.criterias[c]:
-                        w_scores = comp_uni_subcr(st.session_state.scores, c, subcr) # для одного подкритерия
-                        for uni in st.session_state.universities:
-                            if uni not in all_w_scores[c]:
-                                all_w_scores[uni] = {}
-                            if c not in all_w_scores[c]:
-                                all_w_scores[uni][c] = {}
-                            all_w_scores[uni][c][subcr] = w_scores[uni][c][subcr]
+            for subcr in st.session_state.criterias[c]:
+                w_scores = comp_uni_subcr(st.session_state.scores, c, subcr) # для одного подкритерия
+                for uni in st.session_state.universities:
+                    if uni not in all_w_scores[c]:
+                        all_w_scores[uni] = {}
+                    if c not in all_w_scores[c]:
+                        all_w_scores[uni][c] = {}
+                    all_w_scores[uni][c][subcr] = w_scores[uni][c][subcr]
 
         for uni in st.session_state.universities:
             sc = integral_score(uni, crs_w, subcrs_w, all_w_scores)
