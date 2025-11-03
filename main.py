@@ -275,8 +275,7 @@ def compare_subcrs(sorted_list, criteria):
 
     # сразу нормируем
     all_sum = sum(vl_vecs)
-    for x in vl_vecs:
-        x /= all_sum
+    vl_vecs = [x / all_sum for x in vl_vecs]
 
     subcr_w = {criteria: vl_vecs}
     return subcr_w 
