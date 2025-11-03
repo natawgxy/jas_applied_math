@@ -200,9 +200,9 @@ def comp_uni_subcr(scores, cr, subcr):
     result = [subcr, score_subcr]
     return result
 
-# табличка с попарным сравнением критериев/подкритериев
-def com_cr_or_subcr(sorted_list):
-    # у меня логика такая: находим позицию каждого критерия/подкритерия в отсорт. массиве и сравниваем попарно позиции, если разница == 1, то ..
+# попарное сравнение критериев и рассчёт их весов
+def compare_criterias(sorted_list):
+    # логика такая: находим позицию каждого критерия/подкритерия в отсорт. массиве и сравниваем попарно позиции, если разница == 1, то ..
     n = len(sorted_list)
     table = [[0 for _ in range(n)] for _ in range(n)]
     for i in range(n):
@@ -236,21 +236,59 @@ def com_cr_or_subcr(sorted_list):
     for x in vl_vecs:
         x /= all_sum
 
-    result = [[sorted_list[i], round(vl_vecs[i], 3)] for i in range(n)]
+    result = [[sorted_list[i], round(vl_vecs[i], 3)] for i in range(n)] # название критерия, вес
     return result
 
+# попарное сравнение подкритериев в пределах критерия и рассчёт весов
+def compare_subcrs(sorted_list, criteria):
+    n = len(sorted_list)
+    table = [[0 for _ in range(n)] for _ in range(n)]
+    for i in range(n):
+        table[i][i] = 1
     
+    for i in range(n):
+        for j in range(i+1, n):
+            diff = abs(j-i)
+            if diff == 1:
+                table[i][j] = 3
+                table[j][i] = 1/3
+            if diff == 2:
+                table[i][j] = 5
+                table[j][i] = 1/5
+            if diff == 3:
+                table[i][j] = 7
+                table[j][i] = 1/7
+            if diff == 4:
+                table[i][j] = 9
+                table[j][i] = 1/9
+    vl_vecs = []   
+    for i in range(n):
+        vl_vec = 1
+        for j in range(n):
+            vl_vec = vl_vec * table[i][j] 
+        vl_vec = vl_vec ** (1/n)
+        vl_vecs.append(vl_vec)
+
+    # сразу нормируем
+    all_sum = sum(vl_vecs)
+    for x in vl_vecs:
+        x /= all_sum
+
+    subcr_w = {criteria: vl_vecs}
+    return subcrs_w 
+
+# subcr_w[название_критерия] = [] = веса подкритерием критерия такого-то
+# score_w = взвешенные оценки уника по подкритериям
 def integral_score(uni, crs_w, subcrs_w, score_w):
     sum1 = 0
     for [cr_name, cr_w] in crs_w:
         sum2 = 0
         for [subcr_name, subcr_w] in subcrs_w[cr_name]:
-            sum2 += (subcr_w * score_w[1][uni])
+            sum2 += (subcr_w * score_w[uni])
         sum2 = sum2 * cr_w
         sum1 += sum2
     return sum1
     
-
 #================
 if st.button("Обрати найкращий університет"):
     if "crit_sorted" not in st.session_state or not st.session_state.crit_sorted:
@@ -258,10 +296,10 @@ if st.button("Обрати найкращий університет"):
     else:
         int_scores = {} # uni, iintegral score
         crs = st.session_state.crit_sorted
-        crs_w = com_cr_or_subcr(crs)
+        crs_w = compare_criterias(crs)
         for c in st.session_state.criterias:
             subcrs = st.session_state.criterias[c]
-            subcrs_w = com_cr_or_subcr(subcrs)
+            subcrs_w = compare_subcrs(subcrs) # веса подкритериев
             for subcr in subcrs:
                 w_scores = comp_uni_subcr(st.session_state.scores, c, subcr)
                 for uni in st.session_state.universities:
@@ -270,7 +308,7 @@ if st.button("Обрати найкращий університет"):
 
         max_sc = 0
         ans_name = ""
-        for [uni_name, iscore] in int_scores:
+        for uni_name, iscore in int_scores.items():
             if iscore > max_sc:
                 max_sc = iscore
                 ans_name = uni_name
