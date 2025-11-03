@@ -201,7 +201,7 @@ def comp_uni_subcr(scores, cr, subcr):
         if cr not in score_subcr[u]:
             score_subcr[u][cr] = {}
         score_subcr[u][cr][subcr] = vl_vecs[i]
-        
+
     return score_subcr
 
 # попарное сравнение критериев и рассчёт их весов
@@ -279,7 +279,7 @@ def compare_subcrs(sorted_list, criteria):
         x /= all_sum
 
     subcr_w = {criteria: vl_vecs}
-    return subcrs_w 
+    return subcr_w 
 
 # subcr_w[название_критерия] = [] = веса подкритерием критерия такого-то
 # score_w = взвешенные оценки уника по подкритериям
