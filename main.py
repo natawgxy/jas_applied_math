@@ -307,10 +307,21 @@ if st.button("Обрати найкращий університет"):
             subcrs_w = {}
             subcrs_w[c] = compare_subcrs(subcrs, c) # веса подкритериев
             for subcr in subcrs:
-                w_scores = comp_uni_subcr(st.session_state.scores, c, subcr)
-                for uni in st.session_state.universities:
-                    sc = integral_score(uni, crs_w, subcrs_w, w_scores)
-                    int_scores[uni] = sc
+                all_w_scores = {}
+                for c in st.session_state.criterias:
+                    all_w_scores[c] = {}
+                    for subcr in st.session_state.criterias[c]:
+                        w_scores = comp_uni_subcr(st.session_state.scores, c, subcr) # для одного подкритерия
+                        for uni in st.session_state.universities:
+                            if uni not in all_w_scores[c]:
+                                all_w_scores[uni] = {}
+                            if c not in all_w_scores[c]:
+                                all_w_scores[uni][c] = {}
+                            all_w_scores[uni][c][subcr] = w_scores[uni][c][subcr]
+
+        for uni in st.session_state.universities:
+            sc = integral_score(uni, crs_w, subcrs_w, w_scores)
+            int_scores[uni] = sc
 
         max_sc = 0
         ans_name = ""
