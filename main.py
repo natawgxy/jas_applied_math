@@ -13,7 +13,7 @@ if "universities" not in st.session_state:
 
 def apply_filters(filters, uni_options):
     final_list = []
-    for country, unis in uni_options:
+    for country, unis in uni_options.items():
         if country in filters:
             final_list.extend(unis)
     return final_list
