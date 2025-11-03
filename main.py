@@ -304,7 +304,7 @@ if st.button("Обрати найкращий університет"):
         for c in st.session_state.criterias:
             subcrs = st.session_state.criterias[c]
             subcrs_w = {}
-            subcrs_w[c] = compare_subcrs(subcrs) # веса подкритериев
+            subcrs_w[c] = compare_subcrs(subcrs, c) # веса подкритериев
             for subcr in subcrs:
                 w_scores = comp_uni_subcr(st.session_state.scores, c, subcr)
                 for uni in st.session_state.universities:
