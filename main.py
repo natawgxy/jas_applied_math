@@ -1,4 +1,6 @@
 import streamlit as st
+from universities_data import uni_options
+
 
 st.title("Ваш помічник у виборі університету")
 universities = []
@@ -7,17 +9,33 @@ if "universities" not in st.session_state:
     st.session_state.universities = []
 
 # session_state - хранит данные вовремя session
-new_uni = st.text_input("Назва університету")
-if st.button("Додати університет"):
-    if new_uni is not None and new_uni not in st.session_state.universities:
-        st.session_state.universities.append(new_uni)
-        st.success(f"Додано {new_uni}")
-    elif new_uni in st.session_state.universities:
-        st.warning("Такий університет вже додано")
+# идея: сделать список университетов для выбора с фильтрацией: Украина, Европа, Америка, Азия. чел может начать вводить название и ему выдаёт возможные варики
 
-if st.session_state.universities is not None:
+def apply_filters(filters, uni_options):
+    final_list = []
+    for country, unis in uni_options:
+        if country in filters:
+            final_list.extend(unis)
+    return final_list
+
+filters = st.multiselect(
+    "Оберіть бажане розташування",
+    options=list(uni_options.keys()),
+    default=["Україна"]
+)
+filtered_list = apply_filters(filters, uni_options)
+new_uni = st.text_input("Введіть або додайте університет")
+selected_unis = st.multiselect(
+    "Оберіть університет(и)",
+    options=filtered_list,
+    default=[]
+)
+if st.button("Додати свій"):
+    selected_unis.append(new_uni)
+
+if selected_unis is not None:
     st.write("Ви додали")
-    for u in st.session_state.universities:
+    for u in selected_unis:
         st.markdown(f"* {u}")
 
 #=====================================================================
