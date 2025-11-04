@@ -333,7 +333,7 @@ if st.button("Обрати найкращий університет"):
         st.session_state["best_uni"] = ans_name
 
 if "res_ready" in st.session_state:
-    st.markdown(f"Найкращий університет для вас: {ans_name}")
+    st.markdown(f"Найкращий університет для вас: {st.session_state["best_uni"]}")
     if st.button("Подивитися деталі аналізу"):
         st.write("Інтегральна оцінка кожного університета")
         st.table(st.session_state["int_scores"], border=True)
