@@ -328,9 +328,14 @@ if st.button("Обрати найкращий університет"):
                 max_sc = iscore
                 ans_name = uni_name
 
-        st.markdown(f"Найкращий університет для вас: {ans_name}")
-        if st.button("Подивитися деталі аналізу"):
-            st.write("Інтегральна оцінка кожного університета")
-            st.table(int_scores, border=True)
+        st.session_state["res_ready"] = True
+        st.session_state["int_scores"] = int_scores
+        st.session_state["best_uni"] = ans_name
+
+if "res_ready" in st.session_state:
+    st.markdown(f"Найкращий університет для вас: {ans_name}")
+    if st.button("Подивитися деталі аналізу"):
+        st.write("Інтегральна оцінка кожного університета")
+        st.table(st.session_state["int_scores"], border=True)
 
 
