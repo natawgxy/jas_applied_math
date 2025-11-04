@@ -1,6 +1,7 @@
 import streamlit as st
 from universities_data import uni_options
 from universities_data import cr_subcr_options
+import pandas as pd
 
 st.title("Ваш помічник у виборі університету")
 st.markdown("Введіть назви університетів, які ви розглядаєте для вступу")
@@ -336,6 +337,8 @@ if "res_ready" in st.session_state:
     st.markdown(f"Найкращий університет для вас: {st.session_state["best_uni"]}")
     if st.button("Подивитися деталі аналізу"):
         st.write("Інтегральна оцінка кожного університета")
-        st.table(st.session_state["int_scores"], border=True)
+        data = pd.DataFrame(list(st.session_state["int_scores"].items()), columns=["Назва", "Оцінка"])
+        st.table(data, border=True)
 
+# была ошибка: кнопки внутри ифов не сохраняют своё состояние
 
