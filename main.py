@@ -337,7 +337,8 @@ if "res_ready" in st.session_state:
     st.markdown(f"Найкращий університет для вас: {st.session_state["best_uni"]}")
     if st.button("Подивитися деталі аналізу"):
         st.write("Інтегральна оцінка кожного університета")
-        data = pd.DataFrame(list(st.session_state["int_scores"].items()), columns=["Назва", "Оцінка"])
+        data = pd.DataFrame(list(st.session_state["int_scores"].items()), columns=["Назва", "Оцінка"]).reset_index(drop=True)
+        data = data.sort_values(by="Оцінка", ascending=False)
         st.table(data, border=True)
 
 # была ошибка: кнопки внутри ифов не сохраняют своё состояние
