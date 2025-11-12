@@ -278,7 +278,6 @@ def compare_subcrs(sorted_list, criteria):
     all_sum = sum(vl_vecs)
     vl_vecs = [x / all_sum for x in vl_vecs]
 
-    #subcr_w = {criteria: vl_vecs}
     return vl_vecs
 
 # score_w = взвешенные оценки уника по подкритериям
@@ -342,4 +341,5 @@ if "res_ready" in st.session_state:
         st.table(data, border=True)
 
 # была ошибка: кнопки внутри ифов не сохраняют своё состояние
+#..
 
